@@ -1,0 +1,45 @@
+<cfcomponent>
+	<cffunction name="invoke" returntype="any" access="public" output="false" hint="Implementation of cfinvoke to call in scripts" >
+		<cfargument name="theObject" type="any" required="true" hint="The target of the invoke" />
+		<cfargument name="theMethod" type="string" required="true" hint="The method to invoke" />
+		<cfargument name="args" type="struct" required="false" default="#{}#" hint="The arguments to pass to invoke" />	
+		<cfset var returnVar = "" />
+
+		<cfinvoke component="#arguments.theObject#" method="#arguments.theMethod#" returnvariable="returnVar" argumentcollection="#arguments.args#" />
+		
+		<cfif isDefined("returnVar") >
+			<cfreturn returnVar />
+		</cfif>
+	</cffunction>
+
+	<cffunction name="fileRead" returntype="any" access="public" output="false" hint="Implmentation of cffile action: read" >
+		<cfargument name="filePath" type="String" required="true" />
+		<cffile action="read" file="#arguments.filePath#" variable="configFile" />
+		<cfreturn configFile />
+	</cffunction>
+
+	<cffunction name="ldap" returntype="any" access="public" output="false" hint="Implementation of cfldap.  Will throw error if ldap fails so ALWAYS wrap in try/catch" >
+		<cfargument name="action" type="string" />
+		<cfargument name="server" type="string" />
+		<cfargument name="attributes" type="string" />
+		<cfargument name="start" type="string" />
+		<cfargument name="username" type="string" />
+		<cfargument name="password" type="string" />
+		<cfargument name="filter" type="string" />
+
+		<cfldap name="retValue" 
+				action="#arguments.action#"
+				server="#arguments.server#" 
+				attributes="#arguments.attributes#"
+				start="#arguments.start#"
+				username="#arguments.username#"
+				password="#arguments.password#"
+				filter="#arguments.filter#" />
+		
+		<cfif isQuery(retValue)>
+			<cfreturn retValue />
+		<cfelse>
+			<cfreturn false />
+		</cfif>
+	</cffunction>
+</cfcomponent>

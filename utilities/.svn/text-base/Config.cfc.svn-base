@@ -1,0 +1,193 @@
+/**
+* @accessors true
+*/
+component hint="I set a structure of configuration options for the app, loaded from an xml file."{
+
+	/**
+	* @getters true
+	* @setters true
+	* @type String
+	*/
+	property separator;
+
+	/**
+	* @getters true
+	* @setters true
+	* @type String
+	*/
+	property configPath;
+
+	/**
+	* @getters true
+	* @setters true
+	* @type String
+	*/
+	property applicationPath;
+
+	/**
+	* @setters true
+	* @type utilities.ScriptFunctions
+	*/
+	property scriptFunctions;
+
+	/**
+	* @getters true
+	* @setters true
+	* @type Struct
+	*/
+	property values;
+
+	public Config function init()
+	output=false hint="Constructor for config object."{
+
+		variables.Separator = createObject("java","java.lang.System").getProperty("file.separator");
+		variables.configPath = '';
+		variables.scriptFunctions = {};
+		variables.applicationPath = '';
+		variables.values = {};
+
+		return this;
+	}
+
+	public void function config()
+	output=false hint="I run the config file"{
+		var i = 0;
+		var files = '';
+		
+		loadXMLConfig(variables.configPath);
+	}
+
+	public any function getSetting(required String setting)
+	output=false hint="Gets a setting based on key passed in"{
+		var i = 0;
+			var path = ListToArray(arguments.setting, '.');
+			var current = variables.values;
+			var val = '';
+				
+			for (i=1; i LTE ArrayLen(path); i=i+1) {
+				if (StructKeyExists(current, path[i])) {
+					current = current[path[i]];
+				} else {
+					break;
+				}
+				val = current;
+			}
+			
+			if (isStruct(val) AND StructKeyExists(val, 'type')) {
+				switch (val.type) {
+					case 'bean':
+						val = variables.BeanFactory.getBean(val.value);
+						break;
+				}
+			}
+			
+			return val;
+	}
+
+	public void function addSetting(required String setting, required any value)
+	output=false hint="I ad da setting to the settings structure"{
+		var i = 0;
+		var path = ListToArray(arguments.setting, '.');
+		var val = variables.values;
+		
+		for (i=1; i LTE ArrayLen(path); i=i+1) {
+			if (NOT StructKeyExists(val, path[i]) OR isStruct(val[path[i]])) {
+				if (i EQ ArrayLen(path))
+					val[path[i]] = value;
+				else {
+					if (NOT StructKeyExists(val, path[i]))
+						val[path[i]] = {};
+					
+					val = val[path[i]];
+				}
+			}
+		}
+	}
+
+	private void function loadXMLConfig(String filePath)
+	output=false hint="I load the config file from XML"{
+		var configFile = '';
+
+		if(NOT structKeyExists(arguments, "filePath")){
+			arguments.filePath = variables.configPath;
+		}
+
+		configFile = xmlParse(variables.scriptFunctions.fileRead(arguments.filePath));
+
+		loadFromXML(configFile);
+	}
+
+	private void function loadFromXML(required xml xmlContent)
+	output=false hint="Parse the xml file into a internal struct"{
+		var item = 0;
+		
+		var configValues = loadFromXMLNode(xmlContent.configuration);
+
+		for (item in configValues)
+		{	
+			// if current config value not exists then add it otherwise overwrite its value
+			if(NOT structKeyExists(variables.values,item) OR NOT IsStruct(variables.values[item])){
+				variables.values[item] = configValues[item];				
+			} else {
+				//Overwrite values if exists
+				StructAppend(variables.values[item],configValues[item],true);
+			}
+		}
+	}
+
+	private any function loadFromXMLNode(required xml xmlNode)
+	output=false hint="I load items into the config structure from an xml node"{
+		var i = 0;
+		var contents = {};
+		var local = {};
+		
+		if (ArrayLen(xmlNode.XmlChildren) EQ 0) {
+			contents = xmlNode.XmlText;
+
+			if (StructKeyExists(xmlNode.XmlAttributes, 'type'))
+			{
+				switch (xmlNode.XmlAttributes['type'])
+				{
+					case 'path':
+						if (StructKeyExists(xmlNode.XmlAttributes, 'expand') AND isBoolean(xmlNode.XmlAttributes['expand']) AND xmlNode.XmlAttributes['expand'])
+						{
+							contents = variables.applicationPath & contents;
+						}
+						break;
+					case 'bean':
+						local.beanId = createuuid();
+						local.attributes = ['parent', 'id', 'autowire', 'singleton'];
+						local.coldspring = XmlParse('<beans><bean id="#local.beanId#"  class="#contents#" /></beans>');
+						for (i=1; i LTE ArrayLen(local.attributes); i=i+1) {
+							if (StructKeyExists(xmlNode.XmlAttributes, local.attributes[i])) {
+								local.coldspring.beans.bean.XmlAttributes[local.attributes[i]] = xmlNode.XmlAttributes[local.attributes[i]];
+							}
+						}
+						
+						variables.BeanFactory.loadBeansFromXmlObj(local.coldspring);
+						contents = {
+							type = xmlNode.XmlAttributes['type']
+							,value = local.coldspring.beans.bean.XmlAttributes['id']
+						};
+						break;
+					case 'array':
+						local.values = [];
+						for(i=1; i <= xmlNode.xmlChildren; i++){
+							arrayApend(local.values,xmlNode.xmlChildren[i]);
+						}
+
+						contents = local.values;
+						break;
+				}
+			}
+			
+		} else {
+			for (i=1; i LTE ArrayLen(xmlNode.XmlChildren); i=i+1)
+			{
+				contents[xmlNode.XmlChildren[i].XmlName] = LoadFromXMLNode(xmlNode.XmlChildren[i]);
+			}
+		}
+		
+		return contents;
+	}
+}

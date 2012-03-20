@@ -44,6 +44,7 @@ header{
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 	margin-top: 1em;
+	margin-bottom: 1em;
 	padding-bottom: 1em;
 	font-size: 1.5em;
 	-webkit-box-shadow: 8px 8px 8px rgba(33, 33, 33, .4);
@@ -76,11 +77,11 @@ header{
 	-webkit-box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
 	-moz-box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
 	box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
-	border: 2px solid rgba(60,60,60,1);
+	border: 3px solid rgba(60,60,60,1);
 }
 
 #contact-list li:hover{
-	border: 2px dashed #49AC2E;
+	border: 3px dashed #49AC2E;
 }
 
 #details{

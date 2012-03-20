@@ -1,0 +1,22 @@
+component hint="Wrapper for some structure functions"{
+	
+	public StructHelpers function init()
+	output=false hint="Constructor"{
+		return this;
+	}
+
+	public Struct function extend()
+	output=false hint="I take structs and add their keys"{
+		var ret = {};
+
+		writedump(var=arguments,output="console");
+
+		for(var i = 1; i <= arrayLen(arguments); i++){
+			for(key in arguments[i]){
+				ret[key] = arguments[i][key];
+			}
+		}
+
+		return ret;
+	}
+}	

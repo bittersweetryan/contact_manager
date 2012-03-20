@@ -1,0 +1,20 @@
+[
+	{ "contact" : {
+		"fullName" : "Homer Simpson",
+		"email" : "homer.simpson@gmail.com",
+		"phone" : "555-555-5555"
+		}
+	},
+	{ "contact" : {
+		"fullName" : "Marge Simpson",
+		"email" : "marge.simpson@gmail.com",
+		"phone" : "444-555-5445"
+		}
+	},
+	{ "contact" : {
+		"fullName" : "Bart Simpson",
+		"email" : "bart.simpson@gmail.com",
+		"phone" : "777-555-5225"	
+		}
+	}
+]
