@@ -1,0 +1,106 @@
+<mockup version="1.0" skin="sketch" measuredW="924" measuredH="679" mockupW="847" mockupH="662">
+  <controls>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="148" y="17" w="712" h="662" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Canvas" x="174" y="100" w="597" h="510" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>roundedSolid</borderStyle>
+        <color>13421772</color>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Label" x="204" y="123" w="-1" h="-1" measuredW="76" measuredH="21" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>inCONTACT</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Canvas" x="211" y="153" w="522" h="422" measuredW="100" measuredH="70" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>roundedSolid</borderStyle>
+        <color>14540253</color>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Canvas" x="212" y="153" w="521" h="70" measuredW="100" measuredH="70" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>roundedSolid</borderStyle>
+        <color>10066329</color>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::SearchBox" x="231" y="176" w="300" h="-1" measuredW="65" measuredH="25" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>search</text>
+      </controlProperties>
+    </control>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Link" x="603" y="178" w="-1" h="-1" measuredW="115" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Create%20contact%20%3E%3E</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Canvas" x="232" y="233" w="486" h="38" measuredW="100" measuredH="70" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>roundedSolid</borderStyle>
+        <color>16770457</color>
+      </controlProperties>
+    </control>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Label" x="238" y="242" w="-1" h="-1" measuredW="78" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ryan%20Anklam</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::LinkBar" x="562" y="242" w="-1" h="-1" measuredW="145" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>more%2C%20edit%2C%20delete</text>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Canvas" x="231" y="273" w="486" h="110" measuredW="100" measuredH="70" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>roundedDotted</borderStyle>
+        <color>16770457</color>
+      </controlProperties>
+    </control>
+    <control controlID="13" controlTypeID="com.balsamiq.mockups::Label" x="237" y="284" w="78" h="21" measuredW="60" measuredH="21" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Bill%20Gates</text>
+      </controlProperties>
+    </control>
+    <control controlID="14" controlTypeID="com.balsamiq.mockups::LinkBar" x="561" y="284" w="-1" h="-1" measuredW="138" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>hide%2C%20edit%2C%20delete</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Label" x="238" y="305" w="-1" h="-1" measuredW="46" measuredH="21" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>name%3A%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::Label" x="238" y="326" w="-1" h="-1" measuredW="40" measuredH="21" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>email%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::Label" x="238" y="349" w="-1" h="-1" measuredW="44" measuredH="21" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>phone%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="18" controlTypeID="com.balsamiq.mockups::StickyNote" x="740" y="201" w="184" h="123" measuredW="109" measuredH="123" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Border%20turns%20dashed%20for%20currently%20mouseovered%20contact</text>
+      </controlProperties>
+    </control>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::StickyNote" x="77" y="379" w="144" h="78" measuredW="109" measuredH="123" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>edit-in-place</text>
+      </controlProperties>
+    </control>
+    <control controlID="20" controlTypeID="com.balsamiq.mockups::Arrow" x="188" y="337" w="-1" h="-1" measuredW="150" measuredH="100" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <direction>bottom</direction>
+        <leftArrow>false</leftArrow>
+        <text/>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
