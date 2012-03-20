@@ -51,14 +51,7 @@
 						<input name="search">
 					</div> 
 					<ul id="contact-list">
-						<li>
-							<div id="contact">
-								<span class="right">Homer Simpson</span>
-								<span class="left"><a href="#" id="show_details">details</a> | <a href="#" id="edit_contact">edit</a> | <a href="#" id="delete_contact">delete</a>
-								<div id="details">
-									123 Fake St.
-								</div>
-							</li>
+
 					</ul>
 				</div>
 			</div>
@@ -73,22 +66,25 @@
 	</footer>
 
 	<script id="view_contact_template" type="text/template">
-		<div id="contact">
-			<span class="right" id="name"></span>
-			<span class="left"><a href="#" id="show_details">details</a> | <a href="#" id="edit_contact">edit</a> | <a href="#" id="delete_contact">delete</a>
-			<div id="details">
-				<span id="name">{name}</span>
-				<span id="email">{email}</span>
-				<span id="phone">{phone}</span>
+		<div class="contact">
+			<span class="right contact_name">{name}</span>
+			<span class="left contact_links"><a href="#" class="contact_details">details</a> | <a href="#" class="contact_delete">edit</a> | <a href="#" class="contact_delete">delete</a>
+			<div class="contact_details">
+				<p class="contact_details_name">{name}</p>
+				<p class="contact_details_email">{email}</p>
+				<p class="contact_details_phone">{phone}</p>
 			</div>
 		</div>
 	</script>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
-	<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>'); window.jQuery.ui || document.write('<script src="jquery-ui-1.8.18.custom.min"><\/script>';</script>
+	<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>'); window.jQuery.ui || document.write('<script src="jquery-ui-1.8.18.custom.min"><\/script>');</script>
 	<script type="text/javascript" src="js/incontact.app.js"></script>
 	<script type="text/javascript" src="js/incontact.controller.js"></script>
 	<script type="text/javascript" src="js/incontact.contacts.js"></script>
+	<script type="text/javascript">
+		var controller = new InContact.ContactsController();
+	</script>
 </body>
 </html>

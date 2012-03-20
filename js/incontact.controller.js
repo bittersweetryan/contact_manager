@@ -14,11 +14,13 @@
 		
 		// I am collection of DOM elements to which we want to cache jQuery references.
 		this.dom = {};
+
+		self = this;
 	};
 	
 	
 	// Set up the controller prototype.
-	InVision.Controller.prototype = {
+	InContact.Controller.prototype = {
 		
 		// I bind event listeners to this controller.
 		bind: function( eventType, handler ){
@@ -94,4 +96,4 @@
 		
 	};
 	
-})( window.InVision || {}, jQuery );
+})( window.InContact || {}, jQuery );

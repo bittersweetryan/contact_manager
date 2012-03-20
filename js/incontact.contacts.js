@@ -11,17 +11,26 @@
 		
 		// Get the appropriate DOM references.
 		this.dom.window = $( window );
-		this.dom.contact_list = $("#contact-list")
+		this.dom.container = $("#contacts"); //overall wrapper for contacts app
+		this.dom.search = this.dom.container.find("#search");  //search div
+		this.dom.contact_list = this.dom.container.find("#contact-list"); //contact list ul
+		this.dom.contact_template_view = $("#view_contact_template"); //template for a contact
 		
-		// view contact template
-		this.dom.templateContactInfo = $( "#view_contact_template" );
-		
+		this.contacts = [];
+
+		this.ajax = $.extend(
+			{},
+			InContact.ajaxDefaults,
+			{
+				url : "models/contact/Contact.cfc"
+			}
+		);
+
+		//load the contacts
+		this.load();
+
 		// --- Event Bindings ------------------------------------------- //
 		// -------------------------------------------------------------- //
-				
-		
-		// Bind to the state change so that we can look at the mouse move when we need
-		// to update the display and position of the shift-hint.
 		this.bind(
 			"statechange",
 			function( newState, oldState ){
@@ -41,20 +50,15 @@
 				}
 			}
 		);
-			
-		// Bind the form submission.
-		this.dom.form.submit(
-			function( event ){
-				// Prevent default.
-				event.preventDefault();
-				
-				// Check to see if we are responding to UI elements.
-				if (!self.isResponsive){
-					return;
-				}
-				
-				// Save the form.
-				self.saveForm();
+
+		console.log(this.dom.contact_list);
+		
+		//listen for a contact details click
+		this.dom.contact_list.on(
+			"click",
+			"a.contact_details",
+			function(){
+				self.showDetails.call($(this).parent().find("div.contact_details"));
 			}
 		);
 	};
@@ -62,12 +66,76 @@
 	// --- Class Methods -------------------------------------------- //
 	// -------------------------------------------------------------- //
 	// Set up the controller prototype.
-	InVision.ContactsController.prototype = $.extend(
+	InContact.ContactsController.prototype = $.extend(
 		{},
-		new InVision.Controller(),
+		new InContact.Controller(),
 		{
 			load: function(){
-				$.ajax	
+				this.ajax.url += '?method=listAll';
+
+				$.ajaxSetup(this.ajax);
+
+				$.ajax({
+					data : {
+						'method' : 'listAll'
+					},
+					success : self.showAll,
+					error : function(){
+						console.log("oops");
+					}
+
+				});
+			},
+
+			showDetails: function(){
+
+				if(!this.is(":visible")){
+					this.slideDown('slow') ;
+				}
+				else{
+					this.slideUp('slow');
+				}
+			},
+
+			showAll: function(data,textStatus,jqXHR){
+				if(typeof data === 'object'){
+					var len = data.length;
+
+					for(var i = 0; i < len; i++){
+						var contact = data[i];
+
+						if('contact' in contact){
+							self.add(data[i].contact);
+						}
+						else{
+							console.log('error');
+						}
+					}
+				}
+				else{
+					console.log("error");
+				}
+			},
+
+			add : function(contact){
+				var newContact = self.dom.contact_template_view.html();
+				var $newElement = $("<li/>");
+
+				if('email' in contact){
+					newContact = newContact.replace(/\{email\}/g,contact.email);
+				}
+
+				if('fullName' in contact){
+					newContact = newContact.replace(/\{name\}/g,contact.fullName);
+				}
+
+				if('phone' in contact){
+					newContact = newContact.replace(/\{phone\}/g,contact.phone);
+				}
+
+				$newElement.append(newContact).find("div.contact_details").hide();
+
+				self.dom.contact_list.append($newElement);
 			}
 		}
 	);
