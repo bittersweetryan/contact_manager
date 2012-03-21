@@ -71,22 +71,24 @@
 		<form id="editForm">
 		<fieldset>
 			<div>
-				<label for="name">Full Name</label>
-				<input type="text" name="fullName" id="fullName" class="ui-corner-all" />
+				<label for="fullName">Full Name<em>*</em></label>
+				<label for="fullName" generated="true" class="error"></label>
+				<input type="text" name="fullName" id="fullName" class="ui-corner-all required" />
 			</div>
 			<div>
-				<label for="email">Email</label>
-				<input type="email" name="email" id="email" value="" class="ui-corner-all" />
+				<label for="email">Email<em>*</em></label>
+				<label for="email" generated="true" class="error"></label>
+				<input type="email" name="email" id="email" value="" class="ui-corner-all required email" />
 			</div>
 			<div>
-				<label for="password">Phone</label>
-				<input type="tel" name="phone" id="phone" value="" class="ui-corner-all" />
+				<label for="phone">Phone<em>*</em></label>
+				<label for="phone" generated="true" class="error"></label>
+				<input type="tel" name="phone" id="phone" value="" class="ui-corner-all required" />
 			</div>
 		</fieldset>
 		<input type="hidden" name="contactID" id="contactID" value="0" />
 		</form>
 	</div>
-
 <!--- 	<div id="dialog_delete" title="Delete Contact">
 		<form id="deleteForm">
 			<div class="ui-widget">
@@ -115,6 +117,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 	<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>'); window.jQuery.ui || document.write('<script src="jquery-ui-1.8.18.custom.min"><\/script>');</script>
 	<script type="text/javascript" src="js/libs/jquery.toobject.js"></script>
+	<script type="text/javascript" src="js/libs/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="js/incontact.app.js"></script>
 	<script type="text/javascript" src="js/incontact.controller.js"></script>
 	<script type="text/javascript" src="js/incontact.contacts.js"></script>

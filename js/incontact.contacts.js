@@ -1,11 +1,7 @@
 /*****************
 TODO:
 	* set states properly
-	* validate data
-	* form validations
 	* messaging
-	* post actions
-		- edit update the element
 	* look for more caching
 	* make sure that the initialize code is in $();
 *****************/
@@ -32,7 +28,7 @@ TODO:
 
 		this.contacts = [];
 
-		this.ajax = $.extend(
+		this.ajaxDefaults = $.extend(
 			{},
 			InContact.ajaxDefaults,
 			{
@@ -109,6 +105,8 @@ TODO:
 			self.newContact();
 		});
 
+		$("#editForm").validate();
+
 //move this!
 		this.dom.dialog_form.dialog({
 			autoOpen: false,
@@ -125,45 +123,30 @@ TODO:
 			},
 			close: function(){
 				$(this).find("input").val("");
-			}
-		});
-//and this!
 
-/*
-		this.dom.dialog_delete.dialog({
-			autoOpen: false,
-			height: 250,
-			width: 400,
-			modal: true,
-			buttons: {
-				"OK": function() {
-					self.processDelete();
-				},
-				Cancel: function() {
-					$(this).dialog( "close" );
-				}
+				//when the dialog is closed we are always in view state
+				self.setState('view');
 			}
 		});
-*/
 	};
+
 	// --- Class Methods -------------------------------------------- //
 	// -------------------------------------------------------------- //
-	// Set up the controller prototype.
-	// ** Refer to the controller as "self" below **
+	// ** Always refer to the controller's scope as "self" below **
 	InContact.ContactsController.prototype = $.extend(
 		{},
 		new InContact.Controller(),
 		{
+			//get a list of contacts from the server
 			load: function(){
 				
-
-				$.ajaxSetup(this.ajax);
+				$.ajaxSetup(self.ajaxDefaults);
 
 				$.ajax({
 					data : {
 						'method' : 'listAll'
 					},
-					url: this.ajax.url + '?method=listAll',
+					url: self.ajaxDefaults.url + '?method=listAll',
 					success : self.showAll,
 					error : function(){
 						console.log("oops");
@@ -172,6 +155,7 @@ TODO:
 				});
 			},
 
+			//shows & hides the details div
 			showDetails: function(){
 
 				if(!this.is(":visible")){
@@ -182,13 +166,18 @@ TODO:
 				}
 			},
 
+			//shows all the contacts, used as a callback for the load's ajax method
 			showAll: function(data,textStatus,jqXHR){
+				//make sure that we have a json object
 				if(typeof data === 'object'){
+					//cache the length of the array
 					var len = data.length;
 
 					for(var i = 0; i < len; i++){
+						//cache the current loop item
 						var contact = data[i];
 
+						//make sure the current item is a valid contact
 						if('contact' in contact){
 							self.add(data[i].contact);
 						}
@@ -202,10 +191,14 @@ TODO:
 				}
 			},
 
+			//adds a new contact to the list
 			add : function(contact){
+				//get the contact template
 				var newContact = self.dom.contact_template_view.html();
+				//create a li to append to the list
 				var $newElement = $("<li/>");
 
+				//populate the template
 				if('email' in contact){
 					newContact = newContact.replace(/\{email\}/g,contact.email);
 				}
@@ -218,133 +211,155 @@ TODO:
 					newContact = newContact.replace(/\{phone\}/g,contact.phone);
 				}
 
+				//add the template to the new li
 				$newElement.append(newContact)
 					.find("div.contact_details")
 					.hide();
 
-				//I don't really advocate storing data in elements, but
-				//in this case i think its a good solution
+				//store the contact object within this element for later use
+				//i don't usually advocate this sort of thing but givin the time constraint
+				//this solution works
 				if('id' in contact){
 					$newElement.find(":first-child").data('contact',contact);
 				}
 				
+				//add the new item to the DOM
 				self.dom.contact_list.append($newElement);
 			},
-//TODO: i can use the contact object in here to do the match
-			filter : function(text){
-				var contacts = this.dom.contact_list.find("li"),
-					len = contacts.length,
-					name = "";
 
+			filter : function(text){
+				//get all the contact elements
+				var contacts = this.dom.contact_list.find("li .contact"),
+					len = contacts.length,
+					contact;
+
+				//loop through each item and look for a match
 				contacts.each(function(i){
 					var $this = $(this);
-					name = $this.find(".contact_name").html().toLowerCase();
+					//use each elements contact item
+					contact = $this.data('contact');
 
-					if(name.match(new RegExp('\\b' + text.toLowerCase()))){
+					//check for a match, show any hidden elements that now match
+					if(contact && contact.fullName.toLowerCase().match(new RegExp('\\b' + text.toLowerCase()))){
 						if(!$this.is(":visible")){
-							$this.show(function(){
-
-							});
+							$this.parent().show();
 						}
 					}else{
-						$this.hide();
+						//doesn't match, hide the contact element
+						$this.parent().hide();
 					}
 
 				});
 			},
 
+			//hide the default text when search gets focus
 			searchFocus : function(){
 				if(this.val() === this.get(0).defaultValue){
 					this.val('');
 				}
 			},
 
+			//reset the default text when search gets focus
 			searchBlur : function(){
 				if($.trim(this.val()) === ''){
 					this.val(this.get(0).defaultValue);
 				}
 			},
 
+			//initialize the edit form
 			edit: function(){
 				//when called this points to a contact element
 				var contact = this.data('contact');
 
+				//update the controllers state
 				self.setState('edit');
 
 				//not sure I like this too much a new version of jqueryui can break this
 				$("#ui-dialog-title-dialog_form").html("Edit Contact");
 
+				//update the form fields with the current contact's information,
+				//not sure i like how much indenting is going on here
 				self.dom.dialog_form.find("#fullName")
-				.val(contact.fullName)
-					.end()
-				.find("#phone")
-					.val(contact.phone)
+					.val(contact.fullName)
 						.end()
-				.find("#email")
-					.val(contact.email)
-						.end()
-				.find("#contactID")
-					.val(contact.id)
-						.end();
-
-				self.dom.dialog_form.contact = contact;
-
+							.find("#phone")
+								.val(contact.phone)
+									.end()
+										.find("#email")
+											.val(contact.email)
+												.end()
+													.find("#contactID")
+														.val(contact.id);
+				//show the dialog											
 				self.dom.dialog_form.dialog("open");
 			},
 
 			processDelete : function(){
 				var contact = this.data('contact');
 
-				$.ajaxSetup(self.ajax);
+				//setup the ajax request
+				$.ajaxSetup(self.ajaxDefaults);
 
+				//send the request to the server
 				$.ajax({
-					url: self.ajax.url + '?method=delete',
+					url: self.ajaxajaxDefaults.url + '?method=delete',
 					data : {id : contact.id},
 					success : function(data){
 						if(typeof data === 'object' && 'success' in data){
 							if(data.success){
+								//remove the contact form the dom on success
 								self.removeContact(contact.id);
 							}
 						}
 						else{
-
+							console.log("oops");
 						}
 					},
 					error : function(){
 						console.log("oops");
 					}
 				});
-
-				self.dom.dialog_delete.dialog('close');
 			},
 
+			//removes a contact entry from the dom
 			removeContact : function(contactID){
+				//get a list of contacts
 				var contacts = self.dom.contact_list.find("li div.contact"),
 					len = contacts.length;
 
+				//loop through the contacts to find a match
 				contacts.each(function(i){
 					var $this = $(this),
 						contact = $this.data('contact');
 
+					//if the id matches the contact we are trying to delete, remove it
 					if(contact.id === contactID){
+						//fade out the content
 						$this.fadeOut(function(){
+							//then remove the li from the dom
 							$this.parent().remove();
 						});
 					}
 				});
 			},
 
+			//initializes the contact form for a new contact
 			newContact : function(){
+				//create a new contact object
 				var contact = self.blankContact();
 
+				//set the state of the controller
 				self.setState('new');
 
+				//update the title of the form
 				//not sure I like this too much a new version of jqueryui can break this
 				$("#ui-dialog-title-dialog_form").html("New Contact");
 
+				//show the dialog
 				self.dom.dialog_form.dialog("open");
 			},
 
+			//create a new blank contact object
 			blankContact : function(){
 				return {
 					fullName : "",
@@ -353,19 +368,22 @@ TODO:
 				};
 			},
 
+			//updates the contact list items on successful save
 			updateOnSave : function(contact){
 
+				//get a list of the contact elements
 				var contacts = self.dom.contact_list.find("li div.contact"),
 					len = contacts.length;
 
+				//loop through the contacts and look for a match
 				contacts.each(function(i){
+					//cache $(this)
 					var $this = $(this),
-						currentContact = $this.data('contact');
+						currentContact = $this.data('contact');  //get the contact from the element
 
 					if(contact.id === currentContact.id){
 
-						console.log(contact);
-
+						//update the display
 						$this.find(".contact_name").html(contact.fullName)
 							.end()
 								.find(".contact_details_name span").html(contact.fullName)
@@ -373,34 +391,51 @@ TODO:
 										.find(".contact_details_email span").html(contact.email)
 											.end()
 												.find(".contact_details_phone span").html(contact.phone);
-
+						//update this items contact object
 						$this.data('contact',contact);
 					}
 				});
 			},
 
+			//i save a contact on the server, the server is smart enough to know weather
+			//to add a new item or update an existing one
 			save: function(){
-				$.ajaxSetup(self.ajax);
+				//validate the form
+				if(self.dom.dialog_form.find("form").valid()){
+					
+					//setup the ajax request
+					$.ajaxSetup(self.ajaxDefaults);
 
-				$.ajax({
-					url: self.ajax.url + '?method=save',
-					data : self.dom.dialog_form.find("form").toObject(),
-					success : function(data){
-						//if the save function returns a new contact add it
-						if(typeof data === 'object' && 'contact' in data && 'success' in data){
-							self.updateOnSave(data.contact);
-						}
-						else if(typeof data === 'object' && 'contact' in data){
-							self.add(data.contact);
-						}
+					//call the server's save method
+					$.ajax({
+						url: self.ajaxDefaults.url + '?method=save',
+						data : self.dom.dialog_form.find("form").toObject(),
+						success : function(data){
 
-						self.dom.dialog_form.dialog("close");
-						
-					},
-					error : function(){
-						console.log("oops");
-					}
-				});
+							//if the server updates a contact it will return a success boolean and
+							//a updated contact object
+							if(typeof data === 'object' && 'contact' in data && 'success' in data){
+								self.updateOnSave(data.contact);
+							}
+							//if the server just returns a contact object it added a new contact
+							else if(typeof data === 'object' && 'contact' in data){
+								self.add(data.contact);
+							}
+							else{
+								//something unexpected happened
+								console.log("error");
+							}
+
+							//close the dialog
+							self.dom.dialog_form.dialog("close");
+							
+						},
+						error : function(){
+							console.log("oops");
+						}
+					});
+				}
+		
 			}
 		}
 	);
