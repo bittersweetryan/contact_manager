@@ -27,7 +27,6 @@ TODO:
 		this.dom.dialog_delete = $("#dialog_delete");
 
 		this.contacts = [];
-
 		this.ajaxDefaults = $.extend(
 			{},
 			InContact.ajaxDefaults,
@@ -35,9 +34,6 @@ TODO:
 				url : "models/contact/Contact.cfc"
 			}
 		);
-
-		//load the contacts
-		this.load();
 
 		// --- Event Bindings ------------------------------------------- //
 		// -------------------------------------------------------------- //
@@ -66,14 +62,15 @@ TODO:
 			"click",
 			"a.contact_details",
 			function(){
-				self.showDetails.call($(this).parent().find("div.contact_details"));
+				console.log($(this));
+				self.showDetails.call($(this).parent().parent().find("div.contact_details"));
 			}
 		)
 		.on(
 			"click",
 			"a.contact_edit",
 			function(){
-				self.edit.call($(this).parent().parent());
+				self.edit($(this).parent().parent());
 			}
 		)
 		.on(
@@ -81,7 +78,7 @@ TODO:
 			"a.contact_delete",
 			function(){
 				if(confirm("Are you sure you want to delete this contact?")){
-					self.processDelete.call($(this).parent().parent());
+					self.processDelete($(this).parent().parent());
 				}
 			}
 		);
@@ -104,6 +101,8 @@ TODO:
 		this.dom.new_contact_link.on("click",function(){
 			self.newContact();
 		});
+
+		this.load();
 
 		$("#editForm").validate();
 
@@ -139,15 +138,18 @@ TODO:
 		{
 			//get a list of contacts from the server
 			load: function(){
-				
-				$.ajaxSetup(self.ajaxDefaults);
+				var self = this;
+
+				$.ajaxSetup(this.ajaxDefaults);
 
 				$.ajax({
 					data : {
 						'method' : 'listAll'
 					},
-					url: self.ajaxDefaults.url + '?method=listAll',
-					success : self.showAll,
+					url: this.ajaxDefaults.url + '?method=listAll',
+					success : function(data,textStatus,jqXHR){
+						self.showAll(data);
+					},
 					error : function(){
 						console.log("oops");
 					}
@@ -157,7 +159,7 @@ TODO:
 
 			//shows & hides the details div
 			showDetails: function(){
-
+				console.log(this);
 				if(!this.is(":visible")){
 					this.slideDown('slow') ;
 				}
@@ -167,7 +169,8 @@ TODO:
 			},
 
 			//shows all the contacts, used as a callback for the load's ajax method
-			showAll: function(data,textStatus,jqXHR){
+			showAll: function(data){
+				var self = this;
 				//make sure that we have a json object
 				if(typeof data === 'object'){
 					//cache the length of the array
@@ -194,22 +197,27 @@ TODO:
 			//adds a new contact to the list
 			add : function(contact){
 				//get the contact template
-				var newContact = self.dom.contact_template_view.html();
+				var newContact = this.dom.contact_template_view.html();
+
+				
+
 				//create a li to append to the list
 				var $newElement = $("<li/>");
 
 				//populate the template
 				if('email' in contact){
-					newContact = newContact.replace(/\{email\}/g,contact.email);
+					newContact = newContact.replace(new RegExp('\\{email\\}', 'gi'),contact.email);
 				}
 
 				if('fullName' in contact){
-					newContact = newContact.replace(/\{name\}/g,contact.fullName);
+					newContact = newContact.replace(new RegExp('\\{name\\}','gi'),contact.fullName);
 				}
 
 				if('phone' in contact){
-					newContact = newContact.replace(/\{phone\}/g,contact.phone);
+					newContact = newContact.replace(new RegExp('\\{phone\\}','g'),contact.phone);
 				}
+
+				console.log(newContact);
 
 				//add the template to the new li
 				$newElement.append(newContact)
@@ -224,7 +232,7 @@ TODO:
 				}
 				
 				//add the new item to the DOM
-				self.dom.contact_list.append($newElement);
+				this.dom.contact_list.append($newElement);
 			},
 
 			filter : function(text){
@@ -267,19 +275,21 @@ TODO:
 			},
 
 			//initialize the edit form
-			edit: function(){
-				//when called this points to a contact element
-				var contact = this.data('contact');
+			edit: function(target){
 
+				//when called this points to a contact element
+				var contact = target.data('contact');
+
+				console.log(contact);
 				//update the controllers state
-				self.setState('edit');
+				this.setState('edit');
 
 				//not sure I like this too much a new version of jqueryui can break this
 				$("#ui-dialog-title-dialog_form").html("Edit Contact");
 
 				//update the form fields with the current contact's information,
 				//not sure i like how much indenting is going on here
-				self.dom.dialog_form.find("#fullName")
+				this.dom.dialog_form.find("#fullName")
 					.val(contact.fullName)
 						.end()
 							.find("#phone")
@@ -290,19 +300,20 @@ TODO:
 												.end()
 													.find("#contactID")
 														.val(contact.id);
-				//show the dialog											
-				self.dom.dialog_form.dialog("open");
+				//show the dialog2
+				this.dom.dialog_form.dialog("open");
 			},
 
-			processDelete : function(){
-				var contact = this.data('contact');
+			processDelete : function(target){
+				var contact = target.data('contact'),
+					self = this;
 
 				//setup the ajax request
 				$.ajaxSetup(self.ajaxDefaults);
 
 				//send the request to the server
 				$.ajax({
-					url: self.ajaxajaxDefaults.url + '?method=delete',
+					url: self.ajaxDefaults.url + '?method=delete',
 					data : {id : contact.id},
 					success : function(data){
 						if(typeof data === 'object' && 'success' in data){
@@ -324,7 +335,7 @@ TODO:
 			//removes a contact entry from the dom
 			removeContact : function(contactID){
 				//get a list of contacts
-				var contacts = self.dom.contact_list.find("li div.contact"),
+				var contacts = this.dom.contact_list.find("li div.contact"),
 					len = contacts.length;
 
 				//loop through the contacts to find a match
@@ -346,17 +357,17 @@ TODO:
 			//initializes the contact form for a new contact
 			newContact : function(){
 				//create a new contact object
-				var contact = self.blankContact();
+				var contact = this.blankContact();
 
 				//set the state of the controller
-				self.setState('new');
+				this.setState('new');
 
 				//update the title of the form
 				//not sure I like this too much a new version of jqueryui can break this
 				$("#ui-dialog-title-dialog_form").html("New Contact");
 
 				//show the dialog
-				self.dom.dialog_form.dialog("open");
+				this.dom.dialog_form.dialog("open");
 			},
 
 			//create a new blank contact object
@@ -372,7 +383,7 @@ TODO:
 			updateOnSave : function(contact){
 
 				//get a list of the contact elements
-				var contacts = self.dom.contact_list.find("li div.contact"),
+				var contacts = this.dom.contact_list.find("li div.contact"),
 					len = contacts.length;
 
 				//loop through the contacts and look for a match
@@ -400,6 +411,8 @@ TODO:
 			//i save a contact on the server, the server is smart enough to know weather
 			//to add a new item or update an existing one
 			save: function(){
+				var self = this;
+
 				//validate the form
 				if(self.dom.dialog_form.find("form").valid()){
 					

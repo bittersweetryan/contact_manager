@@ -46,7 +46,7 @@
 
 				</div>
 			</div>
-			<div class="eightcol" last>
+			<div class="eightcol last">
 				<div id="contacts">
 					<div id="search">
 						<span>
@@ -72,17 +72,17 @@
 		<fieldset>
 			<div>
 				<label for="fullName">Full Name<em>*</em></label>
-				<label for="fullName" generated="true" class="error"></label>
+				<label for="fullName" class="error"></label>
 				<input type="text" name="fullName" id="fullName" class="ui-corner-all required" />
 			</div>
 			<div>
 				<label for="email">Email<em>*</em></label>
-				<label for="email" generated="true" class="error"></label>
+				<label for="email" class="error"></label>
 				<input type="email" name="email" id="email" value="" class="ui-corner-all required email" />
 			</div>
 			<div>
 				<label for="phone">Phone<em>*</em></label>
-				<label for="phone" generated="true" class="error"></label>
+				<label for="phone" class="error"></label>
 				<input type="tel" name="phone" id="phone" value="" class="ui-corner-all required" />
 			</div>
 		</fieldset>
@@ -103,8 +103,8 @@
 
 	<script id="view_contact_template" type="text/template">
 		<div class="contact">
-			<span class="right contact_name">{name}</span>
-			<span class="left contact_links"><a href="#" class="contact_details">details</a> | <a href="#" class="contact_edit">edit</a> | <a href="#" class="contact_delete">delete</a>
+			<span class="contact_name">{name}</span>
+			<span class="contact_links"><a href="#" class="contact_details">details</a> | <a href="#" class="contact_edit">edit</a> | <a href="#" class="contact_delete">delete</a></span>
 			<div class="contact_details">
 				<p class="contact_details_name">Name: <span>{name}</span></p>
 				<p class="contact_details_email">Email: <span>{email}</span></p>
@@ -122,7 +122,7 @@
 	<script type="text/javascript" src="js/incontact.controller.js"></script>
 	<script type="text/javascript" src="js/incontact.contacts.js"></script>
 	<script type="text/javascript">
-		var controller = new InContact.ContactsController();
+		var incontactController = new InContact.ContactsController();
 	</script>
 </body>
 </html>

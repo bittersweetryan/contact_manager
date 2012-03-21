@@ -14,8 +14,6 @@
 		
 		// I am collection of DOM elements to which we want to cache jQuery references.
 		this.dom = {};
-
-		self = this;
 	};
 	
 	

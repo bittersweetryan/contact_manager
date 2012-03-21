@@ -183,7 +183,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 			}
 
 			//if the contact has a valid id then update it
-			if(structKeyExists(form,"contactID") && len(form.contactID)){
+			if(structKeyExists(form,"contactID") && len(form.contactID) && form.contactID != 0){
 				variables.id=htmlEditFormat(form.contactID);
 				return update();
 			}

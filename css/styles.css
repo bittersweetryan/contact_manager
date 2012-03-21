@@ -6,11 +6,11 @@
 body {
 	color: #3F4D59;
 	letter-spacing: 0.1em;
-	background-color: rgba(60,60,60,1);
+	background-color: rgb(60,60,60);
 }
 
 a {
-	color: rgba(139,192,89,1);
+	color: rgb(139,192,89);
 }
 
 .sunkenText{
@@ -53,7 +53,7 @@ footer{
 
 #contacts{
 	min-width: 600px;
-	background-color: rgba(238,238,238,1);
+	background-color: rgb(238,238,238);
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
@@ -74,7 +74,7 @@ footer{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	color: rgba(200,200,200,1);
+	color: rgb(200,200,200);
 }
 
 #contact-list{
@@ -82,7 +82,7 @@ footer{
 }
 
 div.contact_details{
-	background-color: rgba(100,100,100,1);
+	background-color: rgb(100,100,100);
 	padding: .3em;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -93,14 +93,14 @@ div.contact_details{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	background-color: rgba(60,60,60,1);
+	background-color: rgb(60,60,60);
 	margin: 1em;
-	color: rgba(238,238,238,1);
+	color: rgb(238,238,238);
 	padding: .5em;
 	-webkit-box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
 	-moz-box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
 	box-shadow: 4px 4px 4px rgba(33, 33, 33, .4);
-	border: 3px solid rgba(60,60,60,1);
+	border: 3px solid rgb(60,60,60);
 }
 
 #contact-list li:hover{
