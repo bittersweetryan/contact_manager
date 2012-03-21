@@ -41,7 +41,7 @@ component hint="I am the base bean for this application."{
 			var key = props[i].name;
 
 			if(structKeyExists(variables,key) && !isNull(variables[key])){
-				if(structKeyExists(props[i],"getters") && props[i].getters && !isCustomFunction(variables[key])){
+				if(structKeyExists(props[i],"getters") && props[i].getters && !isCustomFunction(variables[key]) && !structKeyExists(props[i],"ignore")){
 					
 					if(!isObject(variables[key]) && !isArray(variables[key])){
 						memento[key] = variables[key];		

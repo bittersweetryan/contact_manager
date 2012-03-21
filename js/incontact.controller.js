@@ -87,9 +87,7 @@
 						
 						// Invoke the event listener using THIS object as the context.
 						eventListener.handler.apply( self, eventArguments );
-						
 					}
-				
 				}
 			);
 		}

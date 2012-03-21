@@ -13,8 +13,11 @@ a {
 	color: rgba(139,192,89,1);
 }
 
-header{
+.sunkenText{
+	text-shadow: 1px 1px 0 white;
+}	
 
+.lightGradient{
 	background: rgb(238,238,238); /* Old browsers */
 	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
 	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VlZWVlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
@@ -24,7 +27,10 @@ header{
 	background: -o-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
 	background: linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-8 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-8 */	
+}
+
+header{
 	line-height: 2.5em;
 	font-size: 2.5em;
 	font-weight: bold;
@@ -33,8 +39,16 @@ header{
 	-moz-box-shadow: 0px 8px 4px rgba(33, 33, 33, .4);
 	box-shadow: 0px 8px 4px rgba(33, 33, 33, .4);
 	color: #3F4D59;
-	text-shadow: 1px 1px 0 white;
 	text-indent: 1em;
+}
+
+footer{
+	line-height: 2em;
+	font-size: 1em;
+	color: #e3e3e3;
+	width:100%;
+	margin: 0 auto;
+	text-align: center;
 }
 
 #contacts{
@@ -60,6 +74,7 @@ header{
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	color: rgba(200,200,200,1);
 }
 
 #contact-list{
@@ -88,30 +103,24 @@ header{
 	margin-top: .3em;
 	margin-bottom: .3em;
 }
-	
 
-/* ============================= */
-/* ! Layout for mobile version   */
-/* ============================= */
-
-@media handheld, only screen and (max-width: 767px) {
-
-	body {
-		
-	}
-
+form label{
+	display:block;
+	font-size: 1.2em;
 }
 
+#dialog_form form input{
+	margin: 1em;
+	font-size: 1.5em;
+	width: 80%;
+}
 
-/* ========================================== */
-/* ! Provide higher res assets for iPhone 4   */
-/* ========================================== */
+a#newContact{
+	color: rgb(41,122,31);
+	text-decoration: none;
+	font-weight: bold;
+}
 
-@media only screen and (-webkit-min-device-pixel-ratio: 2) { 
-
-/*	.logo {
-		background: url(logo2x.jpg) no-repeat;
-		background-size: 212px 303px;
-	}*/
-
+a#newContact:hover{
+	text-decoration: underline;
 }

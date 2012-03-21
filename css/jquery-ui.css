@@ -1,0 +1,84 @@
+/* Override the jQuery UI dialog styles */
+
+.modalWindow {
+	display: none;
+}
+
+.ui-dialog {
+	padding: 0;
+	overflow: visible;
+	z-index: 999999 !important;
+}
+
+.ui-widget-overlay {
+	z-index: 999998 !important;
+}
+
+.ui-dialog-titlebar {
+	background-image: none;
+	background-color: #cbcfd2 ;
+	background: -moz-linear-gradient( center top , #FFFFFF, #cbcfd2 ) repeat scroll 0 0 transparent ;
+	background: -webkit-gradient(linear, center top, center bottom, from(#FFFFFF), to(#cbcfd2));
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#FFFFFF, endColorstr=#cbcfd2)";
+	
+	border: none;
+	color: #323a41;
+	text-shadow: 1px 1px #FFF;
+	font-size: 36px;
+	text-transform: uppercase;
+	font-weight: normal;
+	line-height: 32px;
+	padding: 15px 5px 15px 15px !important;
+	-moz-border-radius-bottomleft: 0;
+	-moz-border-radius-bottomright: 0;
+	-webkit-border-bottom-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+
+}
+
+.ui-dialog-title {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.ui-dialog-title span {
+	color: #7D878F;
+	font-size: 26px;
+	text-transform: none;
+	margin-left: 10px;
+}
+
+.ui-dialog-titlebar-close {
+	background: url(images/ui-dialog-close.png) no-repeat;
+	display: block;
+	width: 59px !important;
+	height: 59px !important;
+	text-indent: -999em;
+	position: absolute !important;
+	top: -30px !important;
+	right: -30px !important;
+	z-index: 9999999;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: none;
+}
+
+.ui-dialog-titlebar-close:hover,
+.ui-dialog-titlebar-close:focus {
+	border: none;
+	background: url(images/ui-dialog-close.png) no-repeat;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.ui-dialog-titlebar-close span {
+	display: none !important;
+}
+
+.ui-dialog-content {
+	overflow: visible !important;
+}
+
+.ui-dialog-content a {
+	color: #538DB7;
+}

@@ -8,6 +8,13 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 	* @setters true
 	* @type String
 	*/
+	property id;
+
+	/**
+	* @getters true
+	* @setters true
+	* @type String
+	*/
 	property fullName;
 
 	/**
@@ -28,6 +35,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 	* @getters false
 	* @setters true
 	* @type Array
+	* @ignore true
 	*/
 	property contacts;
 
@@ -52,6 +60,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		variables.fullName = "";
 		variables.email = "";
 		variables.phone = "";
+		variables.id = 0;
 		
 		if(structKeyExists(arguments, "fileLocation") && len(arguments.fileLocation)){
 			variables.meta.fileLocation = arguments.fileLocation;	
@@ -123,7 +132,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		variables.meta = getMetaData(this);
 	}
 
-	private void function clearMeta()
+	public void function clearMeta()
 	output=false hint=""{
 		var meta = getMetaData(this);
 
@@ -134,5 +143,87 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		if(structKeyExists(meta,"fileLocation")){
 			structDelete(meta, "fileLocation");
 		}
+	}
+
+	public Struct function save()
+	output=false hint="I either update or add a contact" returnFormat="JSON"{
+
+		if(structKeyExists(form,"email")){
+			variables.email = form.email;
+		}
+		if(structKeyExists(form,"phone")){
+			variables.phone = form.phone;
+		}
+		if(structKeyExists(form,"fullName")){
+			variables.fullName = form.fullName;
+		}
+
+		try{
+
+			if(structKeyExists(form,"id") && form.id){
+				variables.id=form.id;
+				update();
+
+				return {"success" = "true"};
+			}
+			else{
+				return add();
+			}
+		}
+		catch(Any ex){
+			return {"success" = "false", "message" = "#ex.message#"};
+		}
+
+	}
+
+	private void function update()
+	output=false hint="I update a contact"{
+		if(structIsEmpty(variables.meta)){
+			getMeta();
+		}
+
+		for(contact in variables.meta.contacts){
+			contact = contact.contact;
+
+			if(contact.id == variables.id){
+				contact.fullName = variables.fullName;
+				contact.phone = variables.phone;
+				contact.email = variables.email;
+
+				writeData();
+
+				break;
+			}
+		}
+	}
+
+	private void function writeData()
+	output=false hint="I persist data to the filesystem"{
+		if(!structKeyExists(variables.meta,"fileLocation") || 
+			!structKeyExists(variables.meta,"contacts")){
+			throw("filelocation or contacts does not exist in metadata!  Try to reinit this object.");
+		}
+
+		fileWrite(variables.meta.fileLocation,serializeJSON(variables.meta.contacts));
+	}
+
+	private Struct function add()
+	output=false hint="I add a new contact"{
+
+		var contact = {};
+
+		if(structIsEmpty(variables.meta)){
+			getMeta();
+		}
+
+		variables.id = createUUID();
+
+		contact["contact"] = this.getMemento();
+
+		arrayAppend(variables.meta.contacts,contact);
+
+		writeData();
+
+		return contact;
 	}
 }

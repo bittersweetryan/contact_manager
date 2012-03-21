@@ -48,4 +48,15 @@ component extends="mxunit.framework.TestCase"{
 
 		assertIsArray(contacts);
 	}
+
+	public void function testSave(){
+
+		form.fullName = "Millhouse VanHouten";
+		form.phone = "555-222-3333";
+		form.email = "mvh@gmail.com";
+
+		variables.contact.save();
+
+		assertNotEquals(0,variables.contact.getId(),"should have set the id on save.");
+	}
 }
