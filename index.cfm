@@ -68,7 +68,7 @@
 	</footer>
 
 	<div id="dialog_form" title="Contact">
-		<form>
+		<form id="editForm">
 		<fieldset>
 			<div>
 				<label for="name">Full Name</label>
@@ -83,36 +83,36 @@
 				<input type="tel" name="phone" id="phone" value="" class="ui-corner-all" />
 			</div>
 		</fieldset>
-		<input type="hidden" name="id" id="id" value="0" />
+		<input type="hidden" name="contactID" id="contactID" value="0" />
 		</form>
 	</div>
 
-	<div id="dialog_delete" title="Delete Contact">
-		<form>
+<!--- 	<div id="dialog_delete" title="Delete Contact">
+		<form id="deleteForm">
 			<div class="ui-widget">
 				<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
 					<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
 					Are you sure you want to delete this contact?</p>
 				</div>
 			</div>
-			<input type="hidden" name="contactID" id="contactID" value="0" />
+			<input type="hidden" name="idToDelete" id="idToDelete" value="0" />
 		</form>
-	</div>
+	</div> --->
 
 	<script id="view_contact_template" type="text/template">
 		<div class="contact">
 			<span class="right contact_name">{name}</span>
 			<span class="left contact_links"><a href="#" class="contact_details">details</a> | <a href="#" class="contact_edit">edit</a> | <a href="#" class="contact_delete">delete</a>
 			<div class="contact_details">
-				<p class="contact_details_name">Name: {name}</p>
-				<p class="contact_details_email">Email: {email}</p>
-				<p class="contact_details_phone">Phone: {phone}</p>
+				<p class="contact_details_name">Name: <span>{name}</span></p>
+				<p class="contact_details_email">Email: <span>{email}</span></p>
+				<p class="contact_details_phone">Phone: <span>{phone}</span></p>
 			</div>
 		</div>
 	</script>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 	<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>'); window.jQuery.ui || document.write('<script src="jquery-ui-1.8.18.custom.min"><\/script>');</script>
 	<script type="text/javascript" src="js/libs/jquery.toobject.js"></script>
 	<script type="text/javascript" src="js/incontact.app.js"></script>

@@ -160,11 +160,9 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 
 		try{
 
-			if(structKeyExists(form,"id") && form.id){
-				variables.id=form.id;
-				update();
-
-				return {"success" = "true"};
+			if(structKeyExists(form,"contactID") && form.contactID){
+				variables.id=form.contactID;
+				return update();
 			}
 			else{
 				return add();
@@ -176,7 +174,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 
 	}
 
-	private void function update()
+	private Struct function update()
 	output=false hint="I update a contact"{
 		if(structIsEmpty(variables.meta)){
 			getMeta();
@@ -190,6 +188,8 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		contact.email = variables.email;
 
 		writeData();
+
+		return {"success" = "true","contact" = contact};
 	}
 
 	private Struct function getById(String id)

@@ -2,8 +2,12 @@
 TODO:
 	* set states properly
 	* validate data
+	* form validations
 	* messaging
 	* post actions
+		- edit update the element
+	* look for more caching
+	* make sure that the initialize code is in $();
 *****************/
 
 // Define the Hot Spots Controller Class, make sure undefined is undefined
@@ -80,7 +84,9 @@ TODO:
 			"click",
 			"a.contact_delete",
 			function(){
-				self.confirmDelete.call($(this).parent().parent());
+				if(confirm("Are you sure you want to delete this contact?")){
+					self.processDelete.call($(this).parent().parent());
+				}
 			}
 		);
 
@@ -93,10 +99,10 @@ TODO:
 		);
 
 		this.dom.search.find("input").on('focus',function(){
-			self.searchFocus.call($(this));
-		})
-		.on('blur',function(){
-			self.searchBlur.call($(this));
+				self.searchFocus.call($(this));
+			})
+			.on('blur',function(){
+				self.searchBlur.call($(this));
 		});
 
 		this.dom.new_contact_link.on("click",function(){
@@ -114,14 +120,16 @@ TODO:
 					self.save();
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$(this).dialog( "close" );
 				}
 			},
-			close: function() {
-				$(this).find("input").val( "" );
+			close: function(){
+				$(this).find("input").val("");
 			}
 		});
 //and this!
+
+/*
 		this.dom.dialog_delete.dialog({
 			autoOpen: false,
 			height: 250,
@@ -132,12 +140,12 @@ TODO:
 					self.processDelete();
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$(this).dialog( "close" );
 				}
 			}
 		});
+*/
 	};
-	
 	// --- Class Methods -------------------------------------------- //
 	// -------------------------------------------------------------- //
 	// Set up the controller prototype.
@@ -222,7 +230,7 @@ TODO:
 				
 				self.dom.contact_list.append($newElement);
 			},
-
+//TODO: i can use the contact object in here to do the match
 			filter : function(text){
 				var contacts = this.dom.contact_list.find("li"),
 					len = contacts.length,
@@ -275,7 +283,7 @@ TODO:
 				.find("#email")
 					.val(contact.email)
 						.end()
-				.find("#id")
+				.find("#contactID")
 					.val(contact.id)
 						.end();
 
@@ -284,27 +292,18 @@ TODO:
 				self.dom.dialog_form.dialog("open");
 			},
 
-			confirmDelete: function(){
-				//when called this points to a contact element
+			processDelete : function(){
 				var contact = this.data('contact');
 
-				self.dom.dialog_delete.find("#contactID").val(contact.id);
-
-				self.setState('delete');
-
-				self.dom.dialog_delete.dialog("open");
-			},
-
-			processDelete : function(){
-				$.ajaxSetup(this.ajax);
+				$.ajaxSetup(self.ajax);
 
 				$.ajax({
-					url: this.ajax.url + '?method=delete',
-					data : {id : self.dom.dialog_delete.find("#contactID").val()},
+					url: self.ajax.url + '?method=delete',
+					data : {id : contact.id},
 					success : function(data){
 						if(typeof data === 'object' && 'success' in data){
 							if(data.success){
-								self.dom.dialog_delete.dialog('close');
+								self.removeContact(contact.id);
 							}
 						}
 						else{
@@ -315,17 +314,33 @@ TODO:
 						console.log("oops");
 					}
 				});
+
+				self.dom.dialog_delete.dialog('close');
+			},
+
+			removeContact : function(contactID){
+				var contacts = self.dom.contact_list.find("li div.contact"),
+					len = contacts.length;
+
+				contacts.each(function(i){
+					var $this = $(this),
+						contact = $this.data('contact');
+
+					if(contact.id === contactID){
+						$this.fadeOut(function(){
+							$this.parent().remove();
+						});
+					}
+				});
 			},
 
 			newContact : function(){
-				var contact = this.blankContact();
+				var contact = self.blankContact();
 
 				self.setState('new');
 
 				//not sure I like this too much a new version of jqueryui can break this
 				$("#ui-dialog-title-dialog_form").html("New Contact");
-
-				self.dom.dialog_form.contact = contact;
 
 				self.dom.dialog_form.dialog("open");
 			},
@@ -338,14 +353,44 @@ TODO:
 				};
 			},
 
+			updateOnSave : function(contact){
+
+				var contacts = self.dom.contact_list.find("li div.contact"),
+					len = contacts.length;
+
+				contacts.each(function(i){
+					var $this = $(this),
+						currentContact = $this.data('contact');
+
+					if(contact.id === currentContact.id){
+
+						console.log(contact);
+
+						$this.find(".contact_name").html(contact.fullName)
+							.end()
+								.find(".contact_details_name span").html(contact.fullName)
+									.end()
+										.find(".contact_details_email span").html(contact.email)
+											.end()
+												.find(".contact_details_phone span").html(contact.phone);
+
+						$this.data('contact',contact);
+					}
+				});
+			},
+
 			save: function(){
-				$.ajaxSetup(this.ajax);
+				$.ajaxSetup(self.ajax);
 
 				$.ajax({
-					url: this.ajax.url + '?method=save',
+					url: self.ajax.url + '?method=save',
 					data : self.dom.dialog_form.find("form").toObject(),
 					success : function(data){
-						if(typeof data === 'object'){
+						//if the save function returns a new contact add it
+						if(typeof data === 'object' && 'contact' in data && 'success' in data){
+							self.updateOnSave(data.contact);
+						}
+						else if(typeof data === 'object' && 'contact' in data){
 							self.add(data.contact);
 						}
 
