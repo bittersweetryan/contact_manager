@@ -145,7 +145,7 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		}
 	}
 
-	public Struct function save()
+	remote Struct function save()
 	output=false hint="I either update or add a contact" returnFormat="JSON"{
 
 		if(structKeyExists(form,"email")){
@@ -181,18 +181,26 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		if(structIsEmpty(variables.meta)){
 			getMeta();
 		}
+		var contact = {};
+
+		contact = getById(variables.id);
+
+		contact.fullName = variables.fullName;
+		contact.phone = variables.phone;
+		contact.email = variables.email;
+
+		writeData();
+	}
+
+	private Struct function getById(String id)
+	output=false hint="I lookup a contact by ID"{
+		var contact = {};
 
 		for(contact in variables.meta.contacts){
 			contact = contact.contact;
 
-			if(contact.id == variables.id){
-				contact.fullName = variables.fullName;
-				contact.phone = variables.phone;
-				contact.email = variables.email;
-
-				writeData();
-
-				break;
+			if(contact.id == arguments.id){
+				return contact;
 			}
 		}
 	}
@@ -225,5 +233,31 @@ component extends="models.Bean" hint="I encapsulate the functionality of a Conta
 		writeData();
 
 		return contact;
+	}
+
+	remote Struct function delete()
+	output="false" returnFormat="JSON"{
+
+		if(!structKeyExists(form, "id")){
+			throw("No id passed in to delete.");
+		}
+
+		if(structIsEmpty(variables.meta)){
+			getMeta();
+		}
+
+		var id = form.id;
+
+		for(var i = 1; i <= arraylen(variables.meta.contacts); i++){
+
+			if(variables.meta.contacts[i].contact.id == id){
+
+				arrayDeleteAt(variables.meta.contacts, i);
+
+				writeData();
+
+				return {"success" = "true"};
+			} 
+		}
 	}
 }

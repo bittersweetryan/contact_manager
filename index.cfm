@@ -64,7 +64,7 @@
 		</div>
 	</div>
 	<footer class="">
-		<p>Thank you for the opportunity to be part of something challenging, a bit scary, and very exciting!</p>
+		<p>Thank you for the opportunity to be part of something challenging and very exciting!</p>
 	</footer>
 
 	<div id="dialog_form" title="Contact">
@@ -95,7 +95,7 @@
 					Are you sure you want to delete this contact?</p>
 				</div>
 			</div>
-		<input type="hidden" name="id" id="id" value="0" />
+			<input type="hidden" name="contactID" id="contactID" value="0" />
 		</form>
 	</div>
 

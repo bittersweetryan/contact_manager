@@ -1,3 +1,10 @@
+/*****************
+TODO:
+	* set states properly
+	* validate data
+	* messaging
+	* post actions
+*****************/
 
 // Define the Hot Spots Controller Class, make sure undefined is undefined
 !(function( InContact, $, undefined ){
@@ -17,8 +24,8 @@
 		this.dom.contact_template_view = $("#view_contact_template"); //template for a contact
 		this.dom.new_contact_link = this.dom.container.find("a#newContact");
 		this.dom.dialog_form = $("#dialog_form");
-		this.dom.dialog_delete = $("dialog_delete");
-		
+		this.dom.dialog_delete = $("#dialog_delete");
+
 		this.contacts = [];
 
 		this.ajax = $.extend(
@@ -68,6 +75,13 @@
 			function(){
 				self.edit.call($(this).parent().parent());
 			}
+		)
+		.on(
+			"click",
+			"a.contact_delete",
+			function(){
+				self.confirmDelete.call($(this).parent().parent());
+			}
 		);
 
 		this.dom.search.on(
@@ -107,15 +121,15 @@
 				$(this).find("input").val( "" );
 			}
 		});
-
+//and this!
 		this.dom.dialog_delete.dialog({
 			autoOpen: false,
-			height: 400,
-			width: 500,
+			height: 250,
+			width: 400,
 			modal: true,
 			buttons: {
 				"OK": function() {
-					self.deleteContact();
+					self.processDelete();
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -268,6 +282,39 @@
 				self.dom.dialog_form.contact = contact;
 
 				self.dom.dialog_form.dialog("open");
+			},
+
+			confirmDelete: function(){
+				//when called this points to a contact element
+				var contact = this.data('contact');
+
+				self.dom.dialog_delete.find("#contactID").val(contact.id);
+
+				self.setState('delete');
+
+				self.dom.dialog_delete.dialog("open");
+			},
+
+			processDelete : function(){
+				$.ajaxSetup(this.ajax);
+
+				$.ajax({
+					url: this.ajax.url + '?method=delete',
+					data : {id : self.dom.dialog_delete.find("#contactID").val()},
+					success : function(data){
+						if(typeof data === 'object' && 'success' in data){
+							if(data.success){
+								self.dom.dialog_delete.dialog('close');
+							}
+						}
+						else{
+
+						}
+					},
+					error : function(){
+						console.log("oops");
+					}
+				});
 			},
 
 			newContact : function(){
