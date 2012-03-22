@@ -29,8 +29,9 @@
 	<link rel="stylesheet" href="css/jquery-ui-1.8.4.invision.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="css/jquery-ui.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="css/styles.css" type="text/css" media="screen" />
-	
-	<!--css3-mediaqueries-js - http://code.google.com/p/css3-mediaqueries-js/ - Enables media queries in some unsupported browsers-->
+	<script type="text/javascript">
+		window.console = window.console || {log : function(){}};
+	</script>
 	<script type="text/javascript" src="js/css3-mediaqueries.js"></script>
 	
 	<script src="js/libs/modernizr-2.5.3.min.js"></script>
@@ -89,17 +90,6 @@
 		<input type="hidden" name="contactID" id="contactID" value="0" />
 		</form>
 	</div>
-<!--- 	<div id="dialog_delete" title="Delete Contact">
-		<form id="deleteForm">
-			<div class="ui-widget">
-				<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
-					<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> 
-					Are you sure you want to delete this contact?</p>
-				</div>
-			</div>
-			<input type="hidden" name="idToDelete" id="idToDelete" value="0" />
-		</form>
-	</div> --->
 
 	<script id="view_contact_template" type="text/template">
 		<div class="contact">
@@ -122,7 +112,9 @@
 	<script type="text/javascript" src="js/incontact.controller.js"></script>
 	<script type="text/javascript" src="js/incontact.contacts.js"></script>
 	<script type="text/javascript">
-		var incontactController = new InContact.ContactsController();
+		$(function(){
+			var incontactController = new InContact.ContactsController();
+		})
 	</script>
 </body>
 </html>

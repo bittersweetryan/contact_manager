@@ -26,7 +26,6 @@ TODO:
 		this.dom.dialog_form = $("#dialog_form");
 		this.dom.dialog_delete = $("#dialog_delete");
 
-		this.contacts = [];
 		this.ajaxDefaults = $.extend(
 			{},
 			InContact.ajaxDefaults,
